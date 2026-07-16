@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+    <!-- 1. Spring标准UTF-8编码过滤器（替换你自定义EncodingFilter，解决乱码） -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 登录权限过滤器 保留 -->
+    <filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>cn.key.Filter.LoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/background/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 原有所有原生Servlet 全部保留不动 -->
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>FindAllBookTypeServlet</servlet-name>
+    <servlet-class>cn.key.servlet.bookTypeServlet.FindAllBookTypeServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SaveBookTypeServlet</servlet-name>
+    <servlet-class>cn.key.servlet.bookTypeServlet.SaveBookTypeServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>FindAllBookInfoServlet</servlet-name>
+    <servlet-class>cn.key.servlet.bookInfoServlet.FindAllBookInfoServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SaveBookInfoServlet</servlet-name>
+    <servlet-class>cn.key.servlet.bookInfoServlet.SaveBookInfoServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>UpdataBookInfoServlet</servlet-name>
+    <servlet-class>cn.key.servlet.bookInfoServlet.UpdataBookInfoServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>FindBookTypeByIdServlet</servlet-name>
+    <servlet-class>cn.key.servlet.bookTypeServlet.FindBookTypeByIdServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>FindBookInfoByIdServlet</servlet-name>
+    <servlet-class>cn.key.servlet.bookInfoServlet.FindBookInfoByIdServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>DeUpdateBookStatesServlet</servlet-name>
+    <servlet-class>cn.key.servlet.bookInfoServlet.DeUpdateBookStatesServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>UpdataBookTypeServlet</servlet-name>
+    <servlet-class>cn.key.servlet.bookTypeServlet.UpdataBookTypeServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>DeUpdateIsDeleteServlet</servlet-name>
+    <servlet-class>cn.key.servlet.bookTypeServlet.DeUpdateIsDeleteServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>InitBookTypeInfoServlet</servlet-name>
+    <servlet-class>cn.key.servlet.bookTypeServlet.InitBookTypeInfoServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>FindBookTypeServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.FindBookTypeServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>FindBookInfoByBookTypeServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.FindBookInfoByBookTypeServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>ShowBookInfoByIdServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.ShowBookInfoByIdServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SaveCustomerInfo</servlet-name>
+    <servlet-class>cn.key.servlet.customerInfoServlet.SaveCustomerInfo</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>FindBookInfoByIndexServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.FindBookInfoByIndexServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>ShowTitleOneServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.ShowTitleOneServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>GwcServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.GwcServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SearchBookDAO</servlet-name>
+    <servlet-class>cn.key.dao.SearchBookDAO</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SysAdminServlet</servlet-name>
+    <servlet-class>cn.key.servlet.sysAdminServlet.SysAdminServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SearchBookServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.SearchBookServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>reLoginServlet</servlet-name>
+    <servlet-class>cn.key.servlet.sysAdminServlet.reLoginServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>CustomerLoginServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.CustomerLoginServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>CustomerRegister</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.CustomerRegister</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>AddFavoriteServlet</servlet-name>
+    <servlet-class>cn.key.servlet.favorite.AddFavoriteServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SaveOrderMainServlet</servlet-name>
+    <servlet-class>cn.key.servlet.order.SaveOrderMainServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>IsLoginServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.IsLoginServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>OrderServlet</servlet-name>
+    <servlet-class>cn.key.servlet.order.OrderServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>ShowMyOrderServlet</servlet-name>
+    <servlet-class>cn.key.servlet.order.ShowMyOrderServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>ShowOrderDetailServlet</servlet-name>
+    <servlet-class>cn.key.servlet.order.ShowOrderDetailServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>FgExitServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.FgExitServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>WriteDiscussServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.WriteDiscussServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SaveDiscussServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.SaveDiscussServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>DeleteFavoriteServlet</servlet-name>
+    <servlet-class>cn.key.servlet.favorite.DeleteFavoriteServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>ShowMyFavoriteServlet</servlet-name>
+    <servlet-class>cn.key.servlet.favorite.ShowMyFavoriteServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>ClearFavoriteServlet</servlet-name>
+    <servlet-class>cn.key.servlet.favorite.ClearFavoriteServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>ShowAllDiscussServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.ShowAllDiscussServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>DeleteCustomerServlet</servlet-name>
+    <servlet-class>cn.key.servlet.customerInfoServlet.DeleteCustomerServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>FindAllCustomerInfoServlet</servlet-name>
+    <servlet-class>cn.key.servlet.customerInfoServlet.FindAllCustomerInfoServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>ShowSysAdminServlet</servlet-name>
+    <servlet-class>cn.key.servlet.sysAdminServlet.ShowSysAdminServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>DeleteSysAdminServlet</servlet-name>
+    <servlet-class>cn.key.servlet.sysAdminServlet.DeleteSysAdminServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>UpSysAdminStatesServlet</servlet-name>
+    <servlet-class>cn.key.servlet.sysAdminServlet.UpSysAdminStatesServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>FindByIdSysAdminServlet</servlet-name>
+    <servlet-class>cn.key.servlet.sysAdminServlet.FindByIdSysAdminServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SaveSysAdminServlet</servlet-name>
+    <servlet-class>cn.key.servlet.sysAdminServlet.SaveSysAdminServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>OrderMakeServlet</servlet-name>
+    <servlet-class>cn.key.servlet.order.OrderMakeServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>UpOrderStatesServlet</servlet-name>
+    <servlet-class>cn.key.servlet.order.UpOrderStatesServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>ShowDiscussServlet</servlet-name>
+    <servlet-class>cn.key.servlet.discuss.ShowDiscussServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>DeleteDisServlet</servlet-name>
+    <servlet-class>cn.key.servlet.discuss.DeleteDisServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>UpDissStatesServlet</servlet-name>
+    <servlet-class>cn.key.servlet.discuss.UpDissStatesServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>FindInfoByCustomerServlet</servlet-name>
+    <servlet-class>cn.key.servlet.bookInfoServlet.FindInfoByCustomerServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>DeleteSearchServlet</servlet-name>
+    <servlet-class>cn.key.servlet.bookInfoServlet.DeleteSearchServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>ChangeServlet</servlet-name>
+    <servlet-class>cn.key.servlet.frontgroundServlet.ChangeServlet</servlet-class>
+  </servlet>
+
+  <!-- 所有原生Servlet映射 保留 -->
+  <servlet-mapping>
+    <servlet-name>FindAllBookTypeServlet</servlet-name>
+    <url-pattern>/FindAllBookTypeServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SaveBookTypeServlet</servlet-name>
+    <url-pattern>/SaveBookTypeServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FindAllBookInfoServlet</servlet-name>
+    <url-pattern>/FindAllBookInfoServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SaveBookInfoServlet</servlet-name>
+    <url-pattern>/SaveBookInfoServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UpdataBookInfoServlet</servlet-name>
+    <url-pattern>/UpdataBookInfoServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FindBookTypeByIdServlet</servlet-name>
+    <url-pattern>/FindBookTypeByIdServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FindBookInfoByIdServlet</servlet-name>
+    <url-pattern>/FindBookInfoByIdServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DeUpdateBookStatesServlet</servlet-name>
+    <url-pattern>/DeUpdateBookStatesServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UpdataBookTypeServlet</servlet-name>
+    <url-pattern>/UpdataBookTypeServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DeUpdateIsDeleteServlet</servlet-name>
+    <url-pattern>/DeUpdateIsDeleteServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>InitBookTypeInfoServlet</servlet-name>
+    <url-pattern>/InitBookTypeInfoServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FindBookTypeServlet</servlet-name>
+    <url-pattern>/FindBookTypeServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FindBookInfoByBookTypeServlet</servlet-name>
+    <url-pattern>/FindBookInfoByBookTypeServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowBookInfoByIdServlet</servlet-name>
+    <url-pattern>/ShowBookInfoByIdServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SaveCustomerInfo</servlet-name>
+    <url-pattern>/SaveCustomerInfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FindBookInfoByIndexServlet</servlet-name>
+    <url-pattern>/FindBookInfoByIndexServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowTitleOneServlet</servlet-name>
+    <url-pattern>/ShowTitleOneServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GwcServlet</servlet-name>
+    <url-pattern>/GwcServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SearchBookDAO</servlet-name>
+    <url-pattern>/SearchBookDAO</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SysAdminServlet</servlet-name>
+    <url-pattern>/SysAdminServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SearchBookServlet</servlet-name>
+    <url-pattern>/SearchBookServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>reLoginServlet</servlet-name>
+    <url-pattern>/reLoginServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CustomerLoginServlet</servlet-name>
+    <url-pattern>/CustomerLoginServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CustomerRegister</servlet-name>
+    <url-pattern>/CustomerRegister</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AddFavoriteServlet</servlet-name>
+    <url-pattern>/AddFavoriteServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SaveOrderMainServlet</servlet-name>
+    <url-pattern>/SaveOrderMainServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>IsLoginServlet</servlet-name>
+    <url-pattern>/IsLoginServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>OrderServlet</servlet-name>
+    <url-pattern>/OrderServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowMyOrderServlet</servlet-name>
+    <url-pattern>/ShowMyOrderServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowOrderDetailServlet</servlet-name>
+    <url-pattern>/ShowOrderDetailServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FgExitServlet</servlet-name>
+    <url-pattern>/FgExitServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>WriteDiscussServlet</servlet-name>
+    <url-pattern>/WriteDiscussServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SaveDiscussServlet</servlet-name>
+    <url-pattern>/SaveDiscussServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DeleteFavoriteServlet</servlet-name>
+    <url-pattern>/DeleteFavoriteServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowMyFavoriteServlet</servlet-name>
+    <url-pattern>/ShowMyFavoriteServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ClearFavoriteServlet</servlet-name>
+    <url-pattern>/ClearFavoriteServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowAllDiscussServlet</servlet-name>
+    <url-pattern>/ShowAllDiscussServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DeleteCustomerServlet</servlet-name>
+    <url-pattern>/DeleteCustomerServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FindAllCustomerInfoServlet</servlet-name>
+    <url-pattern>/FindAllCustomerInfoServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowSysAdminServlet</servlet-name>
+    <url-pattern>/ShowSysAdminServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DeleteSysAdminServlet</servlet-name>
+    <url-pattern>/DeleteSysAdminServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UpSysAdminStatesServlet</servlet-name>
+    <url-pattern>/UpSysAdminStatesServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FindByIdSysAdminServlet</servlet-name>
+    <url-pattern>/FindByIdSysAdminServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SaveSysAdminServlet</servlet-name>
+    <url-pattern>/SaveSysAdminServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>OrderMakeServlet</servlet-name>
+    <url-pattern>/OrderMakeServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UpOrderStatesServlet</servlet-name>
+    <url-pattern>/UpOrderStatesServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowDiscussServlet</servlet-name>
+    <url-pattern>/ShowDiscussServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DeleteDisServlet</servlet-name>
+    <url-pattern>/DeleteDisServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UpDissStatesServlet</servlet-name>
+    <url-pattern>/UpDissStatesServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FindInfoByCustomerServlet</servlet-name>
+    <url-pattern>/FindInfoByCustomerServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DeleteSearchServlet</servlet-name>
+    <url-pattern>/DeleteSearchServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ChangeServlet</servlet-name>
+    <url-pattern>/ChangeServlet</url-pattern>
+  </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>FindBookTypeServlet</welcome-file>
+  </welcome-file-list>
+  
+    <servlet>
+        <servlet-name>UserRegister</servlet-name>
+        <servlet-class>cn.jp.myTest.servlet.UserRegisterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserRegister</servlet-name>
+        <url-pattern>/userRegister</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UserSearch</servlet-name>
+        <servlet-class>cn.jp.myTest.servlet.UserSearchServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserSearch</servlet-name>
+        <url-pattern>/userSearch</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UserInit</servlet-name>
+        <servlet-class>cn.jp.myTest.servlet.UserInitServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserInit</servlet-name>
+        <url-pattern>/userInit</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UserUpdate</servlet-name>
+        <servlet-class>cn.jp.myTest.servlet.UserUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserUpdate</servlet-name>
+        <url-pattern>/userUpdate</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UserDel</servlet-name>
+        <servlet-class>cn.jp.myTest.servlet.UserDelServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserDel</servlet-name>
+        <url-pattern>/userDel</url-pattern>
+    </servlet-mapping>
+
+    <!-- Spring容器监听器 保留 -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/classes/applicationContext.xml,/WEB-INF/classes/spring-mybatis.xml</param-value>
+    </context-param>
+
+    <!-- SpringMVC前端控制器 替代Struts -->
+    <servlet>
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/springmvc.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+	
+</web-app>

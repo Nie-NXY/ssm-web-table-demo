@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace = 接口全类名 -->
+<mapper namespace="cn.jp.myTest.webTable.mapper.RegisterInfoMapper">
+
+	<!-- id = 接口方法名-->
+	<!-- 新增用户信息 -->
+	<insert id="save">
+	    INSERT INTO REGISTERINFO(username, email, password, age, birthday, delflg)
+	    VALUES (
+        #{username},
+        #{email},
+        #{password},
+        #{age},
+        #{birthday},
+        '0'
+   		)
+	</insert>
+	
+	<!-- 伦理删除 -->
+	<update id="deleteByName" >
+		UPDATE REGISTERINFO SET delflg = '1'
+		WHERE 
+		username = #{username}
+	</update>
+	
+	<!-- 查找所有用户信息 -->
+	<select id="findAllInfo" resultType="RegisterInfoEntity">
+	SELECT username, email, password, age, birthday, delflg
+	FROM REGISTERINFO
+	WHERE delflg = '0'
+	</select>
+	
+</mapper>

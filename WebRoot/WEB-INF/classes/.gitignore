@@ -1,0 +1,12 @@
+/ApplicationResources.properties
+/ApplicationResources_en_US.properties
+/ApplicationResources_ja_JP.properties
+/ApplicationResources_zh_CN.properties
+/META-INF
+/applicationContext.xml
+/cn
+/db.properties
+/log4j.properties
+/mybatis-config.xml
+/spring-mybatis.xml
+/ygcbook.sql
