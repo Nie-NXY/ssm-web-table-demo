@@ -18,7 +18,6 @@
 
     <!-- MVC注解驱动 -->
     <mvc:annotation-driven/>
-
     <mvc:default-servlet-handler/>
 
     <!-- 视图解析器 -->
@@ -26,12 +25,5 @@
         <property name="prefix" value="/WEB-INF/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
-
-    <!-- 语言切换拦截器 正确位置 -->
-    <mvc:interceptors>
-        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-            <property name="paramName" value="language"/>
-        </bean>
-    </mvc:interceptors>
 
 </beans>
