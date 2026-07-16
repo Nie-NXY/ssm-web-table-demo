@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.jp.myTest.webTable.service.ChangeAgeService;
 
 @Controller
-public class ChangeAgeController implements ChangeAgeService{
+public class ChangeAgeController{
 	@Autowired
 	ChangeAgeService changeAgeService;
 	
