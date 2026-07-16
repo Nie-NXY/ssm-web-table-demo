@@ -28,6 +28,7 @@ $(function(){
     const $rightMenu = $("#rightMenu");
     const $addRowMenu = $("#addRowMenu");
     const $delRowMenu = $("#delRowMenu");
+    const $checkResultTip = $("#checkResultTip");
     let clickTr; // 保存当前右键点击的tr对象，删除用
 
     // 表格内右键监听 
@@ -144,21 +145,22 @@ $(function(){
 		//追加失去焦点校验功能
 		$tbody.on("blur",'.'+ everyCheck.className,function(){
 			const inputVal = $.trim($(this).val());
+			$checkResultTip.text("");
 			//空校验
 			if(inputVal === ""){
-				alert("前端：" + everyCheck.emptyMsg);
+				$checkResultTip.text(everyCheck.emptyMsg);
 	        	console.log("前端：" + everyCheck.emptyMsg);
 	        	return;
 			}
 			//字节校验（存在maxByte才校验）
 			if(everyCheck.maxByte != null && getUtf8ByteLength(inputVal) > everyCheck.maxByte){
-				alert("前端：" + everyCheck.oversizeMsg);
+				$checkResultTip.text(everyCheck.oversizeMsg);
 				console.log("前端：" + everyCheck.oversizeMsg);
 				return;
 			}
 			//正则校验（存在reg才校验）
 			if(everyCheck.reg && !everyCheck.reg.test(inputVal)){
-				alert("前端：" + everyCheck.illegalMsg);
+				$checkResultTip.text(everyCheck.illegalMsg);
 				console.log("前端：" + everyCheck.illegalMsg);
 				return;
 			}
@@ -228,7 +230,7 @@ $(function(){
 	            	alert("请先输入姓名");
 	                console.log("请先输入姓名");
 	            }else if(res === "illegal"){
-	            	alert("该行数据存在不合规，请检查");
+					alert("该行数据存在不合规，请检查后保存");
 	            	console.log("改行数据存在不合规，请检查");
 	            }else{
 	            	console.log("后端：此行数据存在其他错误");
@@ -288,10 +290,12 @@ $(function(){
 	    <div style="border:1px solid #999;background:#FFF;" id="delRowMenu">行删除</div>
 	</div>
 	
-	<input type="button" id="addNewRowBtn" value="测试按钮：追加一行"><br>
+	<input type="button" id="addNewRowBtn" value="测试按钮：追加一行">
+	<span id="checkResultTip" style="color:red"></span>
+	<br>
 	
 	<form action="addInfo.do" method="post" id="form">
-		<table border="2" style="width:80%">
+		<table border="1" style="width:80%">
 			<thead>
 				<tr>
 					<th>姓名</th><th>邮箱</th><th>密码</th><th>年龄</th><th>生日</th>
