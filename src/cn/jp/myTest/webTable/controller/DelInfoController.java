@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.jp.myTest.webTable.service.DelInfoService;
 
 @Controller
-public class DelInfoServiceController{
+public class DelInfoController{
 	@Autowired
 	DelInfoService delInfoService;
 	
