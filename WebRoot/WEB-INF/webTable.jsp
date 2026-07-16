@@ -202,6 +202,7 @@ $(function(){
 	$tbody.on("blur", ".username,.email,.password,.age,.birthday", function(){
 	    const $currentInput = $(this);
 	    const $currentTr = $currentInput.closest("tr");
+	    const $preSaveCheckTip = $("#preSaveCheckTip");
 	    
 	    // 提取当前整行所有字段值 
 	    const rowData = {
@@ -222,15 +223,16 @@ $(function(){
 	            console.log("后端：正在存入数据库...........");
 	        },
 	        success:function(res){
+	        	$preSaveCheckTip.text("");
 	            if(res === "success"){
 	                console.log("当前行存入成功");
 	            }else if(res === "fail"){
 	                console.log("存入失败");
 	            }else if(res === "noName"){
-	            	alert("请先输入姓名");
+	            	$preSaveCheckTip.text("请先输入姓名");
 	                console.log("请先输入姓名");
 	            }else if(res === "illegal"){
-					alert("该行数据存在不合规，请检查后保存");
+					$preSaveCheckTip.text("该行数据存在不合规，请检查");
 	            	console.log("改行数据存在不合规，请检查");
 	            }else{
 	            	console.log("后端：此行数据存在其他错误");
@@ -290,9 +292,9 @@ $(function(){
 	    <div style="border:1px solid #999;background:#FFF;" id="delRowMenu">行删除</div>
 	</div>
 	
-	<input type="button" id="addNewRowBtn" value="测试按钮：追加一行">
-	<span id="checkResultTip" style="color:red"></span>
-	<br>
+	<input type="button" id="addNewRowBtn" value="测试按钮：追加一行" style="display:none">
+	<span>-</span><span id="checkResultTip" style="color:red"></span><br>
+	<span>-</span><span id="preSaveCheckTip" style="color:red"></span><br>
 	
 	<form action="addInfo.do" method="post" id="form">
 		<table border="1" style="width:80%">
