@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<!-- 写在<head>标签内部最开头 引入jquery的本地包 -->
+<!-- 引入jquery的本地包 -->
 <script src="jquery-3.2.1.min.js"></script>
 <title>用户更新界面</title>
 <script>
