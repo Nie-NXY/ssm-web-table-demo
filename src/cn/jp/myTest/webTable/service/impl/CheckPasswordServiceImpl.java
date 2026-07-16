@@ -6,15 +6,16 @@ import cn.jp.myTest.webTable.service.CheckPasswordService;
 
 @Service
 public class CheckPasswordServiceImpl implements CheckPasswordService{
-	private int upperCharCount = 0;
-	private int lowerCharCount = 0;
-	private int specialCharCount = 0;
 
 	@Override
 	public String checkPassword(String password){
 		if(password == null || password == ""){
 			return "empty";
 		}
+		
+		int upperCharCount = 0;
+		int lowerCharCount = 0;
+		int specialCharCount = 0;
 		
 		String upperCharRgx = "[A-Z]";
 		String lowerCharRgx = "[a-z]";
