@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.jp.myTest.webTable.service.CheckNameService;
 
-
 @Controller
 public class CheckNameController{
 	@Autowired

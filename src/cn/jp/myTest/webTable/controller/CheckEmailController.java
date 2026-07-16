@@ -11,7 +11,6 @@ import cn.jp.myTest.webTable.service.CheckEmailService;
 
 @Controller
 public class CheckEmailController{
-	
 	@Autowired
 	CheckEmailService checkEmailService;
 	
