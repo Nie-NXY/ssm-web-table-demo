@@ -96,11 +96,20 @@ $(function(){
     });
 		
     // 点击页面任意位置，菜单消失
-    $(document).click(function(){
+    $(document).click(function(e){
+    	//关闭自定一级面板
     	$rightMenuTbody.hide();
         $rightMenu.hide();
+        // 关闭二级面板	
+        // 判断点击目标不在搜索替换面板内，才关闭
+		if(!$(e.target).closest("#rightMenu2nd").length){
+			$("#rightMenu2nd").hide();//关闭菜单
+			clearAllHighlight();
+			$("#SMInput").val("");
+			$("#replaceTxt").val("");
+		}
     });
-
+    
     // tbody右键菜单-行追加 
     $addRowMenu.click(function(e){
     	e.stopPropagation(); // 阻止冒泡，防止菜单瞬间消失
@@ -238,6 +247,7 @@ $(function(){
 				let arr = text.split(reg);// 用关键词切割文字，拆分出普通文字和关键词
 				arr.forEach(function(txt){//循环这个被切好的文字数组
 					if(reg.test(txt)){// 匹配到关键词
+						if(txt === "") return;//如果时空字符串就跳过
 						let span = document.createElement("span");// 创建span标签
 						span.className = "search-highlight";//添加标签class属性
 						span.style.background="yellow";
@@ -325,17 +335,6 @@ $(function(){
 		target.style.background="#ff9800";
 		target.scrollIntoView({behavior:"smooth",block:"center"});
 	}
-	
-	// 点击空白关闭搜索面板	
-	$(document).click(function(e){
-		// 判断点击目标不在搜索替换面板内，才关闭
-		if(!$(e.target).closest("#rightMenu2nd").length){
-			$("#rightMenu2nd").hide();//关闭菜单
-			clearAllHighlight();
-			$("#SMInput").val("");
-			$("#replaceTxt").val("");
-		}
-	});
 	
 	// ==================搜索功能结束====================
 
