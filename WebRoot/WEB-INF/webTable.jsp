@@ -192,11 +192,37 @@ $(function(){
 	// 搜索功能
 	//清除所有高亮标签，还原文本
 	function clearAllHighlight(){
-		$(SEARCH_SCOPE).find(".search-highlight").each(function(){
-			$(this).replaceWith($(this).text());
-		});
-		highlightArr = [];
-		highlightIndex = -1;
+	    // 移除所有高亮span，还原纯文本
+	    $(SEARCH_SCOPE).find(".search-highlight").each(function(){
+	        $(this).replaceWith($(this).text());
+	    });
+	    // 合并所有相邻TextNode
+	    const root = document.querySelector(SEARCH_SCOPE);
+	    function mergeTextNodes(el){
+	        let child = el.firstChild;//先赋值为第一个子node
+	        while(child){//子节点存在时一直执行
+	            if(child.nodeType === Node.TEXT_NODE){//如果节点类型是纯文本
+	                let next = child.nextSibling; //声明定义并赋值下一个相邻节点
+	                // 合并后面连续的文本节点
+	                while(next && next.nodeType === Node.TEXT_NODE){//存在下一个节点(next) 且类型也是文本
+	                    child.textContent += next.textContent;//合并文本到本节点
+	                    el.removeChild(next);//删除下一个节点
+	                    next = child.nextSibling;//将此时的下一个节点赋值到next:不存在的话 下次循环不会启动
+	                }
+	            }else if(child.nodeType === Node.ELEMENT_NODE){//节点类型不是纯文本，但是HTML 元素标签节点（`<div>`、`<span>`、`<td>`、`<input>` 这种标签）
+	                // 跳过input/script/style，递归子元素
+	                const tag = child.tagName.toLowerCase();//获取子tag的标签名并转为小写
+	                if(["input","script","style"].indexOf(tag) === -1){//tag中不包含集合中的元素时（-1） 才执行
+	                    mergeTextNodes(child);//递归调用自己，进入当前标签内部继续遍历
+	                }
+	            }
+	            child = child.nextSibling;//子节点不是纯文本也不是HTML元素标签节点的话，给child赋值为下一个节点，进入下一次循环
+	        }
+	    }
+	    mergeTextNodes(root);//调用合并方法
+	    // 重置匹配数组与索引
+	    highlightArr = [];
+	    highlightIndex = -1;
 	}
 	
 	//递归遍历文本节点，添加高亮
