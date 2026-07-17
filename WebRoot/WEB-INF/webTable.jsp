@@ -28,42 +28,91 @@ $(function(){
     const $rightMenu = $("#rightMenu");
     const $addRowMenu = $("#addRowMenu");
     const $delRowMenu = $("#delRowMenu");
+    const $rightMenuTbody = $("#rightMenuTbody");
     const $checkResultTip = $("#checkResultTip");
+    const $searchMenu = $("#searchMenu");
+    const $replaceMenu = $("#replaceMenu");
     let clickTr; // 保存当前右键点击的tr对象，删除用
+	
+	// 搜索相关变量
+	let highlightArr = []; // 保存所有匹配高亮DOM
+	let highlightIndex = -1; // 当前选中索引
+	const SEARCH_SCOPE = "body"; // 只检索表格区域
+	
+	// 屏蔽掉按ctrl+h键这个热键组合
+	$(document).keydown(function(e){
+	    // 判断按键：Ctrl + H
+	    if(e.ctrlKey && e.key.toLowerCase() === 'h'){
+	        e.preventDefault();// 阻止浏览器默认行为
+	        // 获取鼠标最后坐标
+	        let mouseX = lastMouseX;
+	        let mouseY = lastMouseY;
+	
+	        $("#rightMenuTbody").hide();// 隐藏表格内菜单
+	        $("#rightMenu").css({//呼出菜单
+	            left: mouseX + "px",
+	            top: mouseY + "px",
+	            display:"block"
+	        });
+	    }
+	});
+	
+	// 实时记录鼠标坐标
+	let lastMouseX = 0;
+	let lastMouseY = 0;
+	$(document).mousemove(function(e){
+	    lastMouseX = e.pageX;
+	    lastMouseY = e.pageY;
+	});
+	
+	// 右键统一监听
+    $(document).on("contextmenu",function(e){
+        e.preventDefault();//屏蔽浏览器原生右键菜单
+        // 隐藏两个自定义菜单
+        $rightMenuTbody.hide();
+        $rightMenu.hide();
 
-    // 表格内右键监听 
-    $tbody.on("contextmenu","tr",function(e){
-        // e 是右键事件对象
-        e.preventDefault(); // 仅表格内拦截浏览器原生右键菜单
-        clickTr = $(this); // 记录当前右键点击的行
-        
-        // 获取鼠标坐标，控制菜单出现在鼠标点击位置
+        // 判断：右键触发元素是否属于 tbody tr
+        let $target = $(e.target);
+        let insideTr = $target.closest("#tbody tr").length > 0;
         let mouseX = e.pageX;
         let mouseY = e.pageY;
-        // 定位菜单
-        $rightMenu.css({
-            left: mouseX + "px",
-            top: mouseY + "px",
-            display: "block"
-        });
-    });
 
+        if(insideTr){// 右键点击表格行
+            clickTr = $target.closest("tr"); // 记录当前行
+            $rightMenuTbody.css({
+                left: mouseX + "px",
+                top: mouseY + "px",
+                display: "block"
+            });
+        }else{
+            // 右键页面其他位置
+            $rightMenu.css({
+                left: mouseX + "px",
+                top: mouseY + "px",
+                display: "block"
+            });
+        }
+    });
+		
     // 点击页面任意位置，菜单消失
     $(document).click(function(){
+    	$rightMenuTbody.hide();
         $rightMenu.hide();
     });
 
-    // 右键菜单-行追加 
-    $addRowMenu.click(function(){
+    // tbody右键菜单-行追加 
+    $addRowMenu.click(function(e){
+    	e.stopPropagation(); // 阻止冒泡，防止菜单瞬间消失
         let trHtml =getTrHtml();
         clickTr.after(trHtml);
-        $rightMenu.hide(); // 关闭菜单
+        $rightMenuTbody.hide();
     });
 
-    // 右键菜单-行删除 
-    $delRowMenu.click(function(){
+    // tbody右键菜单-行删除 
+    $delRowMenu.click(function(e){
+    	e.stopPropagation(); // 阻止冒泡，防止菜单瞬间消失
     	const $tr = clickTr;
-	    // 获取本行用户名
 	    const usernameVal = $.trim($tr.find(".username").val());
         const sendParam = {username : usernameVal};
     
@@ -87,11 +136,183 @@ $(function(){
 	          console.log("服务器异常，删除失败");
 	        }
 		});
-			
-        $rightMenu.hide();
+        $rightMenuTbody.hide();
     });
+		
+	// 右键菜单【搜索】点击
+	$searchMenu.click(function(e){
+		e.stopPropagation(); // 阻止冒泡，防止菜单瞬间消失
+		console.log("点击搜索");
+		$("#rightMenu").hide();
+		$("#replaceBox").hide();// 隐藏替换区域
+		$("#replaceTxt").val(""); // 清空替换输入框
+		$("#rightMenu2nd").css({
+			left:lastMouseX + "px",
+			top:lastMouseY + "px",
+			display:"block"
+		});
+		$("#SMInput").focus();
+	});
+	
+	// 右键菜单【替换】点击
+	$replaceMenu.click(function(e){
+	    e.stopPropagation();// 阻止冒泡，防止菜单瞬间消失
+	    console.log("点击替换");
+	    $("#rightMenu").hide();
+	    // 显示替换输入区域
+	    $("#replaceBox").show();
+	    $("#rightMenu2nd").css({
+	        left:lastMouseX + "px",
+	        top:lastMouseY + "px",
+	        display:"block"
+	    });
+	    $("#SMInput").focus();
+	});
+	
+	// 全部替换按钮点击
+	$("#replaceAllBtn").click(function(){
+	    let findVal = $.trim($("#SMInput").val());
+	    let repVal = $.trim($("#replaceTxt").val());
+	    if(findVal === ""){
+	        return;
+	    }
+	    // 复用搜索方法，生成匹配高亮
+	    searchInfo(findVal);
+	    if(highlightArr.length === 0){
+	        return;
+	    }
+	    // 批量替换所有搜索匹配到的文字
+	    highlightArr.forEach(function(spanEl){
+	        spanEl.textContent = repVal;
+	    });
+	    clearAllHighlight();
+	    $("#replaceTxt").val("");
+	});
 
-	//设定所有需要校验的输入框信息
+	// 搜索功能
+	//清除所有高亮标签，还原文本
+	function clearAllHighlight(){
+		$(SEARCH_SCOPE).find(".search-highlight").each(function(){
+			$(this).replaceWith($(this).text());
+		});
+		highlightArr = [];
+		highlightIndex = -1;
+	}
+	
+	//递归遍历文本节点，添加高亮
+	function walkTextNode(el,keyword){
+		let reg = new RegExp("(" + keyword + ")","gi");//创建正则，全局、不区分大小写匹配关键词
+		let nodes = Array.from(el.childNodes);//获取当前元素所有子节点，转成数组循环
+		nodes.forEach(function(node){//遍历每一个子节点
+			if(node.nodeType === Node.TEXT_NODE){//纯文字节点（普通文本，不含标签）
+				let text = node.textContent;// 获取文字内容
+				if(!reg.test(text)) return;// 如果没有关键词，不处理
+				let parent = node.parentNode;// 拿到文字的父标签
+				parent.removeChild(node);// 把原来的纯文字节点从页面删掉
+				let arr = text.split(reg);// 用关键词切割文字，拆分出普通文字和关键词
+				arr.forEach(function(txt){//循环这个被切好的文字数组
+					if(reg.test(txt)){// 匹配到关键词
+						let span = document.createElement("span");// 创建span标签
+						span.className = "search-highlight";//添加标签class属性
+						span.style.background="yellow";
+						span.style.color="#000";
+						span.textContent = txt;
+						parent.appendChild(span);// 把高亮span放回父标签
+					}else{//如果不是关键字，新建纯文字节点放回页面
+						parent.appendChild(document.createTextNode(txt));
+					}
+				});
+			}else if(node.nodeType === Node.ELEMENT_NODE){//当前节点是标签
+				let tag = node.tagName.toLowerCase();// 获取标签名称，统一转换成小写
+				if(["input","script","style"].indexOf(tag) > -1) return;// 跳过输入框、脚本、样式，不处理里面的文字
+				walkTextNode(node,keyword);// 递归：进入这个标签内部，继续遍历它的子节点文字
+			}
+		});
+	}
+	
+	//执行搜索方法
+	function searchInfo(str){
+		clearAllHighlight();
+		let key = $.trim(str);
+		if(key === "") return;
+		walkTextNode($(SEARCH_SCOPE)[0],key);
+		highlightArr = Array.from($(SEARCH_SCOPE).find(".search-highlight"));
+		if(highlightArr.length ===0){
+			alert("未找到匹配内容");
+			return;
+		}
+		highlightIndex = -1;
+		goNextMatch();
+	}
+	
+	//下一条
+	$("#preInfo").click(function(){
+		let key = $.trim($("#SMInput").val());
+		if(highlightArr.length<=0){
+			searchInfo(key);
+			return;
+		}
+		goNextMatch();
+	});
+	//上一条
+	$("#nextInfo").click(function(){
+		let key = $.trim($("#SMInput").val());
+		if(highlightArr.length<=0){
+			searchInfo(key);
+			return;
+		}
+		goPrevMatch();
+	});
+	
+	// 输入框回车触发搜索
+	$("#SMInput").on("keydown",function(e){
+		if(e.key === "Enter"){
+			searchInfo($(this).val());
+		}
+	});
+	
+	//跳转到下一处匹配
+	function goNextMatch(){
+		if(highlightArr.length ===0) return;
+		highlightArr.forEach(function(item){
+			item.style.background="#ffeb3b";
+		});
+		highlightIndex ++;
+		if(highlightIndex >= highlightArr.length){
+			highlightIndex = 0;
+		}
+		let target = highlightArr[highlightIndex];
+		target.style.background="#ff9800";
+		target.scrollIntoView({behavior:"smooth",block:"center"});
+	}
+	//跳转到上一处匹配
+	function goPrevMatch(){
+		if(highlightArr.length ===0) return;
+		highlightArr.forEach(function(item){
+			item.style.background="#ffeb3b";
+		});
+		highlightIndex --;
+		if(highlightIndex <0){
+			highlightIndex = highlightArr.length -1;
+		}
+		let target = highlightArr[highlightIndex];
+		target.style.background="#ff9800";
+		target.scrollIntoView({behavior:"smooth",block:"center"});
+	}
+	
+	// 点击空白关闭搜索面板	
+	$(document).click(function(e){
+		// 判断点击目标不在搜索替换面板内，才关闭
+		if(!$(e.target).closest("#rightMenu2nd").length){
+			$("#rightMenu2nd").hide();//关闭菜单
+			clearAllHighlight();
+			$("#SMInput").val("");
+			$("#replaceTxt").val("");
+		}
+	});
+	
+	// ==================搜索功能结束====================
+
 	const allChecks = [
         {
             className: "username",
@@ -142,23 +363,19 @@ $(function(){
 	
 	//遍历所有校验规则
 	allChecks.forEach(function(everyCheck){
-		//追加失去焦点校验功能
-		$tbody.on("blur",'.'+ everyCheck.className,function(){
+		$tbody.on("blur","."+ everyCheck.className,function(){
 			const inputVal = $.trim($(this).val());
 			$checkResultTip.text("");
-			//空校验
 			if(inputVal === ""){
 				$checkResultTip.text(everyCheck.emptyMsg);
 	        	console.log("前端：" + everyCheck.emptyMsg);
 	        	return;
 			}
-			//字节校验（存在maxByte才校验）
 			if(everyCheck.maxByte != null && getUtf8ByteLength(inputVal) > everyCheck.maxByte){
 				$checkResultTip.text(everyCheck.oversizeMsg);
 				console.log("前端：" + everyCheck.oversizeMsg);
 				return;
 			}
-			//正则校验（存在reg才校验）
 			if(everyCheck.reg && !everyCheck.reg.test(inputVal)){
 				$checkResultTip.text(everyCheck.illegalMsg);
 				console.log("前端：" + everyCheck.illegalMsg);
@@ -166,10 +383,8 @@ $(function(){
 			}
 			console.log("前端:" + everyCheck.className + "校验通过");
 			
-			// ajax的data
 			let sendParam = {};
 			sendParam[everyCheck.ajaxParam] = inputVal;
-			//后端校验
 			$.ajax({
 		        url:everyCheck.ajaxUrl,
 		        type:"POST",
@@ -204,7 +419,6 @@ $(function(){
 	    const $currentTr = $currentInput.closest("tr");
 	    const $preSaveCheckTip = $("#preSaveCheckTip");
 	    
-	    // 提取当前整行所有字段值 
 	    const rowData = {
 	        username: $.trim($currentTr.find(".username").val()),
 	        email: $.trim($currentTr.find(".email").val()),
@@ -246,7 +460,7 @@ $(function(){
 			
 	//转换年龄
 	$tbody.on("blur", ".age",function(){
-	    var $ageInput = $(this); //当前输入框
+	    var $ageInput = $(this);
 	    var inputVal = $.trim($(this).val());
 	    var sendParam = {"age":inputVal};
 	    
@@ -259,7 +473,7 @@ $(function(){
 	            console.log("后端：正在校验转换...........");
 	        },
 	        success:function(res){
-	        	$ageInput.next(".ageCN").text(res);// 把后端返回中文填入显示标签
+	        	$ageInput.next(".ageCN").text(res);
 	        },
 	        error:function(e){
 	            console.log("服务器异常，年龄转换失败");
@@ -278,18 +492,36 @@ $(function(){
 	function getUtf8ByteLength(str) {
 	    return new Blob([str]).size;
 	};
-	
 });
-	
 </script>
 </head>
 
 <body>
 <h1>课题-01</h1>
-	<!-- 自定义右键菜单，默认隐藏 -->
-	<div id="rightMenu" style="position:absolute;display:none;border:1px solid #999;background:#FFF;">
-	    <div style="border:1px solid #999;background:#FFF;" id="addRowMenu">行追加</div>
-	    <div style="border:1px solid #999;background:#FFF;" id="delRowMenu">行删除</div>
+	<!-- 表格右键菜单 -->
+	<div id="rightMenuTbody" style="position:absolute;display:none;border:1px solid #999;background:#FFF;z-index:9999;">
+	    <div style="padding:4px 10px;cursor:pointer;border-bottom:1px solid #eee;" id="addRowMenu">行追加</div>
+	    <div style="padding:4px 10px;cursor:pointer;" id="delRowMenu">行删除</div>
+	</div>
+	
+	<!-- 空白区域右键菜单 -->
+	<div id="rightMenu" style="position:absolute;display:none;border:1px solid #999;background:#FFF;z-index:9999;">
+	    <div style="padding:4px 10px;cursor:pointer;border-bottom:1px solid #eee;" id="searchMenu">搜索</div>
+	    <div style="padding:4px 10px;cursor:pointer;" id="replaceMenu">替换</div>
+	</div>
+	
+	<!-- 搜索+替换面板 -->
+	<div id="rightMenu2nd" style="position:absolute;display:none;border:1px solid #999;background:#FFF;z-index:9999;padding:6px;">
+	    <div>查找：<input type="text" id="SMInput" style="width:120px;padding:2px;" placeholder="输入查找内容"></div>
+	    <!-- 替换区域，默认隐藏，点击替换菜单才显示 -->
+	    <div id="replaceBox" style="display:none;margin:4px 0;">
+		  替换：<input type="text" id="replaceTxt" style="width:120px;padding:2px;">
+	        <input type="button" id="replaceAllBtn" value="全部替换">
+	    </div>
+	    <div style="margin-top:4px;">
+	        <input type="button" id="nextInfo" value="上一条">
+	        <input type="button" id="preInfo" value="下一条">
+	    </div>
 	</div>
 	
 	<input type="button" id="addNewRowBtn" value="测试按钮：追加一行" style="display:none">
